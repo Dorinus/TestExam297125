@@ -1,0 +1,38 @@
+@page "/CreateAuthor"
+@using AuthorApi.Models
+@using AuthorBlazor.Data
+@inject NavigationManager NavigationManager
+@inject IAuthorManager AuthorManager
+
+
+<h3>CreateAuthor</h3>
+
+<EditForm Model ="@newAuthor" OnValidSubmit="@CreateNewAuthor"> <DataAnnotationsValidator/>
+    <ValidationSummary/>
+<div class="form-group"> First Name:<br/> <InputText rows="4" @bind-Value="newAuthor.FirstName"/> </div>
+<div class="form-group"> Last Name:<br/> <InputText rows="4" @bind-Value="newAuthor.LastName"/> </div>
+<p class="actions">
+    <button class="btn btn-outline-dark" type="submit">Create Author</button>
+</p></EditForm>
+
+@code {
+    private Author newAuthor = new Author();
+
+    private void CreateNewAuthor()
+    {
+        var incomingAuthor =  AuthorManager.createAuthor(newAuthor);
+        if (newAuthor.FirstName.Equals(incomingAuthor.Result.FirstName))
+        {
+            try
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+}
